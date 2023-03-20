@@ -98,6 +98,8 @@ for /f "tokens=1" %%i in (devices.txt) do (
 	CALL :APKINSTALLFUNC %HmsCoreOUTPUT%, %%i
 	echo Installing Awaken: Choos Era !device!...
 	CALL :APKINSTALLFUNC %InstallAppOUTPUT%, %%i
+	REM ECHO Open Dragon Trail on !device!...
+	REM CALL :RUNAPKFUNC "com.slsmus.huawei", "com.sy4399.yf5lib.MainActivity", %%i
 )
 
 del devices.txt
@@ -123,8 +125,8 @@ REM FUNCTIONS PART
 	)
 EXIT /B 0
 :ADBCONNECTFUNC <ADBOUTPUT>, <PORT>
-	ECHO.%~1 | findstr /v /c:"adb server is out of date" >nul \&\& (
-		ECHO.%~1 | findstr /C:"cannot" /C:"unable" /C:"killing" >nul \&\& (
+	ECHO.%~1 | findstr /v /c:"adb server is out of date" >nul && (
+		ECHO.%~1 | findstr /C:"cannot" /C:"unable" /C:"killing" >nul && (
 			echo %ADBDEFAULTDEVICEERR% - Port Number: %~2 	
 		) || (
 			echo "ADB connection successfully."
@@ -174,7 +176,7 @@ EXIT /B 0
 	powershell -Command "Expand-Archive %~1 -DestinationPath %~2"
 EXIT /B 0
 :CHECKAPPUNINSTALLFUNC <package name>, <device>
-	%ADB_PATH% -s %~2 shell pm list packages | findstr "%~1" >nul \&\& (
+	%ADB_PATH% -s %~2 shell pm list packages | findstr "%~1" >nul && (
 		%ADB_PATH% -s %~2 uninstall %~1
 	) || (
 		echo %~1 is not installed
@@ -188,7 +190,7 @@ EXIT /B 0
 	FOR /F "usebackq" %%A IN ('%file%') DO set %~2=%%~zA 
 EXIT /B 0
 :CHECKIPFUNC <IP>
-	ECHO.%~1 | findstr /c:"127.0.0.1" >nul \&\& (
+	ECHO.%~1 | findstr /c:"127.0.0.1" >nul && (
 		set %~2=1
 	) || (
 		set %~2=0
